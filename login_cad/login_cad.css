@@ -55,3 +55,20 @@ h2{
     margin-inline-start: 0px;
     margin-inline-end: 0px;
 }
+
+#cad {
+    display: block;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+}
+
+#loginMessage{
+    display: block;
+    text-align: center;
+}
+
+#cadMessage{
+    display: block;
+    text-align: center;
+}

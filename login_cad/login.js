@@ -1,8 +1,3 @@
-document.getElementById('login').addEventListener('click', function() {
-  // Redireciona para a página desejada
-  window.location.href = 'login.html';
-});
-
 function submitForm() {
   var username = document.getElementById('username').value;
   var password = document.getElementById('password').value;
@@ -17,4 +12,9 @@ function submitForm() {
       loginMessage.innerHTML = 'Invalid username or password';
       loginMessage.style.color = 'red';
   }
+}
+
+function Cadsuccessful() {
+  window.location.href = "main_page/main.html";
+  return false;
 }

@@ -13,7 +13,7 @@
         <div class="navbar">
             <div class="logo">
                 <a href="#">
-                    <img src="./images/logo.png" alt="Logo" width="50px" height="50px">
+                    <img src="/images/logo.png" alt="Logo" width="50px" height="50px">
                 </a>
             </div>
             <div class="nav-links">
@@ -27,10 +27,10 @@
             <div class="home">
                 <h1 class="main_title">Library</h1>
                 <p class="main_text">A new way to organize your books</p>
-                <button class="login-btn main_login" id="login">Start</button>
+                <button class="login-btn main_login" id="Start">Start</button>
             </div>
             <div class="a_home">
-                <img src="./images/anão_home.jpg" alt="Logo" width="512px" height="512px">
+                <img src="/images/anão_home.jpg" alt="Logo" width="512px" height="512px">
             </div>
         </div>
         <div class="about">
@@ -58,7 +58,14 @@
             </p>
         </div>
     </div>
-    <script src="login.js"></script>
+    <script>
+        document.getElementById('login').addEventListener('click', function() {
+            window.location.href = "/login_cad/login.html";
+        });
+        document.getElementById('Start').addEventListener('click', function() {
+            window.location.href = "/login_cad/login.html";
+        });
+    </script>
 </body>
 
 </html>
