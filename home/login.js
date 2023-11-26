@@ -1,3 +1,23 @@
+function abrirTelaFlutuante() {
+  // Abre a tela flutuante ao clicar no botão "Abrir Tela Flutuante"
+  document.getElementById('login').style.display = 'flex';
+}
+function abrirTelaCadastro() {
+  // Fecha a tela flutuante ao clicar no botão "Fechar"
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('login2').style.display = 'flex';
+}
+
+function fecharTelaFlutuante() {
+  // Fecha a tela flutuante ao clicar no botão "Fechar"
+  document.getElementById('login').style.display = 'none';
+}
+
+function fecharTelaCadastro() {
+  // Fecha a tela flutuante ao clicar no botão "Fechar"
+  document.getElementById('login2').style.display = 'none';
+}
+
 function submitForm() {
   var username = document.getElementById('username').value;
   var password = document.getElementById('password').value;

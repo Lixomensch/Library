@@ -21,13 +21,13 @@
                 <a href="#">About</a>
                 <a href="#">Contact</a>
             </div>
-            <button class="login-btn" id="login">Login</button>
+            <button onclick="abrirTelaFlutuante()" class="login-btn">Login</button>
         </div>
         <div class="flex">
             <div class="home">
                 <h1 class="main_title">Library</h1>
                 <p class="main_text">A new way to organize your books</p>
-                <button class="login-btn main_login" id="Start">Start</button>
+                <button onclick="abrirTelaFlutuante()" class="login-btn main_login">Start</button>
             </div>
             <div class="a_home">
                 <img src="/images/anão_home.jpg" alt="Logo" width="512px" height="512px">
@@ -58,14 +58,53 @@
             </p>
         </div>
     </div>
-    <script>
-        document.getElementById('login').addEventListener('click', function() {
-            window.location.href = "/login_cad/login.html";
-        });
-        document.getElementById('Start').addEventListener('click', function() {
-            window.location.href = "/login_cad/login.html";
-        });
-    </script>
+    <div class="modal" id="login">
+        <div class="login-container">
+            <div class="barra">
+                <h2 id="seila">Login</h2>
+                <button onclick="fecharTelaFlutuante()" id="fechar">X</button>
+            </div>
+
+            <form id="loginForm">
+                <label for="username">Nome:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button id="button2" type="button" onclick="submitForm()">Login</button>
+            </form>
+
+            <p id="loginMessage"></p>
+
+            <div id="cad">
+                <button onclick="abrirTelaCadastro()" id="cadbutton">Ainda não tem conta? Faça seu cadastro</button>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal2" id="login2">
+        <div class="login-container">
+            <div class="barra">
+                <h2 id="seila">Cadastro</h2>
+                <button onclick="fecharTelaCadastro()" id="fechar">X</button>
+            </div>
+            <form action="login.js" method="post" onsubmit="return Cadsuccessful()">
+                <label for="username">Nome:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="senha">Senha:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button id="button2" type="submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+    <script src="login.js"></script>
+
 </body>
 
 </html>
