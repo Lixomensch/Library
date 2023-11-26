@@ -18,15 +18,13 @@ function fecharTelaCadastro() {
   document.getElementById('login2').style.display = 'none';
 }
 
-function submitForm() {
+function submitLogin() {
   var username = document.getElementById('username').value;
   var password = document.getElementById('password').value;
   var loginMessage = document.getElementById('loginMessage');
 
   // Simulação de verificação de login (substitua com lógica real)
   if (username === 'user' && password === 'pass') {
-      loginMessage.innerHTML = 'Login successful!';
-      loginMessage.style.color = 'green';
       window.location.href = 'main.html';
   } else {
       loginMessage.innerHTML = 'Invalid username or password';
@@ -34,7 +32,17 @@ function submitForm() {
   }
 }
 
-function Cadsuccessful() {
-  window.location.href = "main_page/main.html";
-  return false;
+function submitCad() {
+  var username = document.getElementById('username').value;
+  var password = document.getElementById('password').value;
+  var email = document.getElementById('email').value;
+  var loginMessage = document.getElementById('cadMessage');
+
+  // Simulação de verificação de login (substitua com lógica real)
+  if (validaCad(username,password,email)) {
+      window.location.href = 'main.html';
+  } else {
+      loginMessage.innerHTML = 'Invalid username or password';
+      loginMessage.style.color = 'red';
+  }
 }
