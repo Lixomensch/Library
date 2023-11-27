@@ -18,31 +18,70 @@ function fecharTelaCadastro() {
   document.getElementById('login2').style.display = 'none';
 }
 
-function submitLogin() {
-  var username = document.getElementById('username').value;
-  var password = document.getElementById('password').value;
+async function submitLogin() {
+  var username = document.getElementById('loginusername').value;
+  var password = document.getElementById('loginpassword').value;
   var loginMessage = document.getElementById('loginMessage');
 
-  // Simulação de verificação de login (substitua com lógica real)
-  if (username === 'user' && password === 'pass') {
-      window.location.href = 'main.html';
-  } else {
-      loginMessage.innerHTML = 'Invalid username or password';
-      loginMessage.style.color = 'red';
-  }
+  document.getElementById('loginusername').value = "";
+  document.getElementById('loginpassword').value = "";
+
+
+  
+  await fetch('/login',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+    }),
+  }) 
+  .then(Response => Response.json())
+  .then(data =>{
+      if (data.success === false)
+      {
+        loginMessage.innerHTML = 'Invalid username or password';
+        loginMessage.style.color = 'red';
+      }
+      alert(data.message);
+  })
+  .catch(error => {
+      console.error("Erro ao enviar solicitação: ", error);
+  })
+  
 }
 
-function submitCad() {
-  var username = document.getElementById('username').value;
-  var password = document.getElementById('password').value;
-  var email = document.getElementById('email').value;
+async function submitCad() {
+  var username = document.getElementById('signupusername').value;
+  var password = document.getElementById('signuppassword').value;
+
   var loginMessage = document.getElementById('cadMessage');
 
-  // Simulação de verificação de login (substitua com lógica real)
-  if (validaCad(username,password,email)) {
-      window.location.href = 'main.html';
-  } else {
+  document.getElementById('signupusername').value = "";
+  document.getElementById('signuppassword').value = "";
+
+  await fetch('/cadastrar',{
+    method: 'POST',
+    headers:{
+      'Content-Type' : 'application/json',
+    },
+    body: JSON.stringify({
+      username:username,
+      password:password,
+    }),
+})
+  .then(Response=> Response.json())
+  .then(data=>{
+    if(data.success===false){
       loginMessage.innerHTML = 'Invalid username or password';
       loginMessage.style.color = 'red';
-  }
+    }
+    alert(data.message);
+  })
+  .catch(error => {
+    console.error("Erro ao enviar solicitação: ", error);
+})
+  
 }

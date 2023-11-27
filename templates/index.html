@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
@@ -13,7 +13,7 @@
         <div class="navbar">
             <div class="logo">
                 <a href="#">
-                    <img src="/images/logo.png" alt="Logo" width="50px" height="50px">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="50px" height="50px">
                 </a>
             </div>
             <div class="nav-links">
@@ -30,7 +30,7 @@
                 <button onclick="abrirTelaFlutuante()" class="login-btn main_login">Start</button>
             </div>
             <div class="a_home">
-                <img src="/images/anão_home.jpg" alt="Logo" width="512px" height="512px">
+                <img src="{{ url_for('static', filename='anão_home.jpg') }}" alt="Logo" width="512px" height="512px">
             </div>
         </div>
         <div class="about">
@@ -67,10 +67,10 @@
 
             <form id="loginForm">
                 <label for="username">Nome:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="loginusername" name="username" required>
 
                 <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="loginpassword" name="password" required>
 
                 <button id="button2" type="button" onclick="submitLogin()">Login</button>
             </form>
@@ -89,21 +89,19 @@
                 <h2 id="seila">Cadastro</h2>
                 <button onclick="fecharTelaCadastro()" id="fechar">X</button>
             </div>
-            <form action="login.js" method="post" onsubmit="return Cadsuccessful()">
+            <form action="{{ url_for('static', filename='login.js') }}" method="post" onsubmit="return Cadsuccessful()">
                 <label for="username">Nome:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="signupusername" name="username" required>
 
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
 
                 <label for="senha">Senha:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="signuppassword" name="password" required>
                 <p id="cadMessage"></p>
                 <button id="button2" type="button" onclick="submitCad()">Cadastrar</button>
             </form>
         </div>
     </div>
-    <script src="login.js"></script>
+    <script defer src="{{ url_for('static', filename='login.js') }}"></script>
 
 </body>
 

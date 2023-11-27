@@ -45,33 +45,23 @@ def include_book(titulo,autor):
         
 def update_book(titulo,autor,new_titulo,new_autor):
     with db_connection() as connection:
+        #! try:
         cursor = connection.cursor()
-        consulta1 = "SELECT id FROM livros WHERE titulo=? AND autor=?;"
-        cursor.execute(consulta1,(titulo,autor))
-        resultado = cursor.fetchone()
-        if resultado is not None:
-            book_id = resultado[0]
-            consulta2 = "UPDATE livors SET titulo=?, autor=? WHERE id=?;"
-            cursor.execute(consulta2,(new_titulo,new_autor,book_id))
-            connection.commit()
-            return True
-        else:
-            return False
+        #book_id = resultado[0]
+        # consulta = "UPDATE livros SET titulo=?, autor=? WHERE id IN (SELECT id FROM livros WHERE titulo=? AND autor=?);"
+        #cursor.execute(consulta,(new_titulo,new_autor,titulo,autor))
+        #connection.commit()
+            
+    
         
 def delete_book(titulo):
     with db_connection() as connection:
         cursor = connection.cursor()
-        consulta1 = "SELECT id FROM livros WHERE titulo=?;"
-        cursor.execute(consulta1,(titulo))
         resultado = cursor.fetchone()
-        if resultado is not None:
-            book_id = resultado[0]
-            consulta2 = "DELETE FROM livros WHERE id=?;"
-            cursor.execute(consulta2,(book_id))
-            connection.commit()
-            return True
-        else:
-            return False
+        consulta = "DELETE FROM livros WHERE id IN (SELECT id FROM livros WHERE titulo=?);"
+        cursor.execute(consulta,(titulo))
+        connection.commit()
+       
 # FIM DAS FUNÇÕES DOS LIVROS
 
 # COMEÇO FUNÇÕES USUÁRIO  
@@ -84,31 +74,24 @@ def username_exists(username):
         return len(resultados) > 0
 
 def get_login_from_database(username, password):
-    app.logger.info(f"Checking login for username: {username}, password: {password}")
-    
     with db_connection() as connection:
         cursor = connection.cursor()
-        consulta = "SELECT * FROM usuario WHERE username=? AND password=?;"
+        consulta = "SELECT COUNT(*) FROM usuario WHERE username=? AND password=?;"
         cursor.execute(consulta, (username, password))
         resultados = cursor.fetchall()
-
-        if resultados:
-            app.logger.info("Login successful")
-            return True  # Login bem-sucedido
-        else:
-            app.logger.warning("Login failed")
-            return False  # Login falhou
+        return resultados[0][0]
     
 def get_signup_from_database(username, password):
     if username_exists(username):
-        return False  # Nome de usuário já existe, cadastro falhado
+        return -1  # Nome de usuário já existe, cadastro falhado
     else:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "INSERT INTO usuario (username,password) VALUES (?, ?);"
             cursor.execute(consulta, (username, password))
             connection.commit()
-            return True  # Cadastro bem-sucedido
+            return 1  # Cadastro bem-sucedido
+    return 0 # erro com database        
 
 def get_update_from_database(username,password,new_username,new_password):
     with db_connection() as connection:
@@ -190,32 +173,27 @@ def get_library_entry(username):
         return resultado
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def homepage():
-    if request.method == 'POST':
-        data = request.get_json()
-        username = data.get('username')
-        password = data.get('password')
-
-        app.logger.info(f"Received login request for username: {username}")
-
-        # Verificação real no banco de dados
-        if get_login_from_database(username, password):
-            # Login bem-sucedido
-            app.logger.info(f"Login successful for username: {username}")
-            return jsonify({'success': True, 'message': 'Login successful'})
-        else:
-            # Login falhou
-            app.logger.warning(f"Login failed for username: {username}")
-            return jsonify({'success': False, 'message': 'Login failed'})
-    else:
-        return render_template('site.html')
+    return render_template('index.html')
            
-    
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    try:
+        # Login com o banco
+        if get_login_from_database(username, password) == 1:
+            # login bem-sucedido
+            return jsonify({'success': True, 'message': 'Sign in successful'})
+        else:
+            # login falhou
+            return jsonify({'success': False, 'message': 'Sign in failed'})
+    except Exception as e:
+        app.logger.error(f"An error occurred during signup: {e}")
 
-@app.route('/cadastro')
-def cadastro():
-    return render_template('cadastro.html')
+
 
 @app.route('/cadastrar', methods=['POST'])
 def cadastrar():
@@ -223,24 +201,18 @@ def cadastrar():
     username = data.get('username')
     password = data.get('password')
 
-    app.logger.info(f"Received signup request for username: {username}")
-
     try:
         # Cadastro no banco de dados
         if get_signup_from_database(username, password):
             # Cadastro bem-sucedido
-            app.logger.info(f"Signup successful for username: {username}")
             return jsonify({'success': True, 'message': 'Signup successful'})
         else:
             # Cadastro falhou
-            app.logger.warning(f"Signup failed for username: {username}")
             return jsonify({'success': False, 'message': 'Signup failed'})
     except Exception as e:
         app.logger.error(f"An error occurred during signup: {e}")
 
-@app.route('/update')
-def alterar():
-    return render_template('update.html')
+
 
 @app.route('/alterar', methods=['POST'])
 def mudar():
@@ -278,9 +250,7 @@ def mudar():
         app.logger.error(f"An error occurred during user update: {e}")
         return jsonify({'success': False, 'message': 'Internal server error'})
        
-@app.route('/delete')
-def delete():
-    render_template('delete.html')
+
 
 @app.route('/deletar', methods=['POST'])
 def deletar():
