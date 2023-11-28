@@ -44,13 +44,23 @@ def include_book(titulo,autor):
             return True
         
 def update_book(titulo,autor,new_titulo,new_autor):
-    with db_connection() as connection:
-        #! try:
+     with db_connection() as connection:
         cursor = connection.cursor()
-        #book_id = resultado[0]
-        # consulta = "UPDATE livros SET titulo=?, autor=? WHERE id IN (SELECT id FROM livros WHERE titulo=? AND autor=?);"
-        #cursor.execute(consulta,(new_titulo,new_autor,titulo,autor))
-        #connection.commit()
+
+        # Verificar se o livro existe
+        consulta_existencia = "SELECT id FROM livros WHERE titulo=? AND autor=?"
+        cursor.execute(consulta_existencia, (titulo, autor))
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # O livro existe, então podemos atualizar
+            book_id = resultado[0]
+            consulta_atualizacao = "UPDATE livros SET titulo=?, autor=? WHERE id=?"
+            cursor.execute(consulta_atualizacao, (new_titulo, new_autor, book_id))
+            connection.commit()
+            return True
+        else:
+            return False
             
     
         
