@@ -108,13 +108,10 @@ def get_update_from_database(username,password,new_username,new_password):
 def delete_user_from_database(username,password):
     with db_connection() as connection:
         cursor = connection.cursor()
-        consulta1 = "SELECT id FROM usuario WHERE username=? AND password=?;"
-        cursor.execute(consulta1,(username,password))
         resultado = cursor.fetchone()
         if resultado is not None:
-            user_id = resultado[0]
-            consulta2 = "DELETE FROM usuario WHERE id=?;"
-            cursor.execute(consulta2,(user_id))
+            consulta2 = "DELETE FROM usuario WHERE username=? AND password=?;"
+            cursor.execute(consulta2,(username,password))
             connection.commit()
             return True
         else:
@@ -225,8 +222,8 @@ def mudar():
 
     try:
             if username_exists(username):
-                if get_update_from_database(username,password,new_username,new_password):
-                    return jsonify({'success': True, 'message': 'Update successful'})
+                get_update_from_database(username,password,new_username,new_password)
+                return jsonify({'success': True, 'message': 'Update successful'})
             else:
                 return jsonify({'success': False, 'message': 'User not found'})
     except Exception as e:
@@ -241,30 +238,13 @@ def deletar():
     password = data.get('password')
 
     try:
-        # Verificar se o usuário existe
-        with db_connection() as connection:
-            cursor = connection.cursor()
-
-            consulta1 = "SELECT id FROM usuario WHERE username=? AND password=?;"
-            cursor.execute(consulta1, (username, password))
-            result = cursor.fetchone()
-
-            if result is not None:
-                user_id = result[0]
-
-                # Excluir o usuário com base no user_id
-                consulta2 = "DELETE FROM usuario WHERE id=?;"
-                cursor.execute(consulta2, (user_id,))
-
-                connection.commit()
-                app.logger.info(f"Deletion successful for username: {username}")
+            if username_exists(username):
+                delete_user_from_database(username,password)
                 return jsonify({'success': True, 'message': 'Deletion successful'})
             else:
-                app.logger.warning(f"User not found for username: {username}")
                 return jsonify({'success': False, 'message': 'User not found'})
     except Exception as e:
         app.logger.error(f"An error occurred during user deletion: {e}")
-        return jsonify({'success': False, 'message': 'Internal server error'})
     
 @app.route('/pesquisar-capa', methods=['POST'])
 def pesquisar_capa():
