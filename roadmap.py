@@ -145,7 +145,7 @@ def get_book_id_by_title(book_title):
         book_id = cursor.fetchone()
         return book_id[0] if book_id else None
 
-def create_library_entry(username, book_title,avaliacao, status):
+def insert_library(username, book_title,avaliacao, status):
     try:
         user_id = get_user_id_by_username(username)
         book_id = get_book_id_by_title(book_title)
@@ -175,6 +175,19 @@ def get_library_entry(username):
         cursor.execute(consulta, (user_id,))
         resultado = cursor.fetchone()
         return resultado
+
+def get_alter_library(book_title,avaliacao, status):
+    with db_connection() as connection:
+        book_id = get_book_id_by_title(book_title)
+        if book_id is not None:
+            with db_connection() as connection:
+                cursor = connection.cursor()
+                consulta = "UPDATE livros SET avaliacao=?, status=? WHERE id=?"
+                cursor.execute(consulta, (avaliacao, status, book_id))
+                connection.commit()
+                return True
+        else:
+            return False    
 
 
 @app.route('/')
