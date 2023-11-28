@@ -96,13 +96,10 @@ def get_signup_from_database(username, password):
 def get_update_from_database(username,password,new_username,new_password):
     with db_connection() as connection:
         cursor = connection.cursor()
-        consulta1 = "SELECT id FROM usuario WHERE username=? AND password=?;"
-        cursor.execute(consulta1,(username,password))
         resultado = cursor.fetchone()
         if resultado is not None:
-            user_id = resultado[0]
-            consulta2 = "UPDATE usuario SET username=?, password=? WHERE id=?;"
-            cursor.execute(consulta2,(new_username,new_password,user_id))
+            consulta = "UPDATE usuario SET username=?, password=? WHERE username=?;"
+            cursor.execute(consulta,(new_username,new_password))
             connection.commit()
             return True
         else:
@@ -203,12 +200,16 @@ def cadastrar():
 
     try:
         # Cadastro no banco de dados
-        if get_signup_from_database(username, password):
-            # Cadastro bem-sucedido
-            return jsonify({'success': True, 'message': 'Signup successful'})
+        if username_exists(username):
+            return jsonify({'success': True, 'message' : 'Username ja cadastrado'})
+        
         else:
-            # Cadastro falhou
-            return jsonify({'success': False, 'message': 'Signup failed'})
+            if get_signup_from_database(username, password):
+                # Cadastro bem-sucedido
+                return jsonify({'success': True, 'message': 'Signup successful'})
+            else:
+                # Cadastro falhou
+                return jsonify({'success': False, 'message': 'Signup failed'})
     except Exception as e:
         app.logger.error(f"An error occurred during signup: {e}")
 
@@ -222,33 +223,14 @@ def mudar():
     new_username = data.get('new_username')
     new_password = data.get('new_password')
 
-    app.logger.info(f"Received update request for username: {username}")
-
     try:
-        # Verificar se o usuário existe
-        with db_connection() as connection:
-            cursor = connection.cursor()
-            
-            consulta1 = "SELECT id FROM usuario WHERE username=? AND password=?;"
-            cursor.execute(consulta1, (username, password))
-            result = cursor.fetchone()
-
-            if result is not None:
-                user_id = result[0]
-
-                # Atualizar o username e a password para o usuário com o user_id fornecido
-                consulta2 = "UPDATE usuario SET username=?, password=? WHERE id=?;"
-                cursor.execute(consulta2, (new_username, new_password, user_id))
-
-                connection.commit()
-                app.logger.info(f"Update successful for username: {username}")
-                return jsonify({'success': True, 'message': 'Update successful'})
+            if username_exists(username):
+                if get_update_from_database(username,password,new_username,new_password):
+                    return jsonify({'success': True, 'message': 'Update successful'})
             else:
-                app.logger.warning(f"User not found for username: {username}")
                 return jsonify({'success': False, 'message': 'User not found'})
     except Exception as e:
         app.logger.error(f"An error occurred during user update: {e}")
-        return jsonify({'success': False, 'message': 'Internal server error'})
        
 
 
@@ -257,8 +239,6 @@ def deletar():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
-
-    app.logger.info(f"Received delete request for username: {username}")
 
     try:
         # Verificar se o usuário existe
