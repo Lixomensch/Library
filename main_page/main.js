@@ -1,11 +1,89 @@
-function search() {
-    // Obter o valor do campo de pesquisa
-    var searchTerm = document.getElementById('searchInput').value.toLowerCase();
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const coverResult = document.getElementById("coverResult");
+    const cover = document.getElementById("modalcover");
+    const insertBookButton = document.getElementById("insertBookButton");
 
-    // Lógica de pesquisa (substitua isso com a sua lógica de busca real)
-    alert('Você pesquisou por: ' + searchTerm);
-    // Aqui você pode redirecionar para uma página de resultados, atualizar a página com os resultados, etc.
+    let livro = {};
+
+    searchButton.addEventListener("click", function() {
+        const bookTitle = searchInput.value;
+        if (bookTitle.trim() !== "") {
+            search(bookTitle, "AIzaSyC_1Dck7BnjXJT7flc6XbHKg4pJz34amGc")
+                .then(ret => {
+                    livro = {
+                        title: ret.title,
+                        coverUrl: ret.coverUrl,
+                    }
+                    if (ret.coverUrl) {
+                        coverResult.innerHTML = `<img src="${ret.coverUrl}" alt="Capa do Livro">`;
+                        coverResult.innerHTML += `<p>${ret.title}</p>`;
+                        
+                    } else {
+                        coverResult.innerHTML = "Capa não encontrada";
+                    }
+                    cover.style.display = "flex"
+                });
+        }
+    });
+
+    document.addEventListener("click", function(event) {
+        // Verifica se o elemento clicado não está dentro do modal
+        if (!cover.contains(event.target)) {
+            cover.style.display = "none";
+        }
+    });
+
+    insertBookButton.addEventListener("click", function() {
+
+        // Exemplo usando fetch (substitua a URL pelo seu endpoint)
+        fetch("/api/inserirLivro", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(livro),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Livro inserido com sucesso:", data);
+            // Aqui você pode realizar outras ações após a inserção
+        })
+        .catch(error => {
+            console.error("Erro ao inserir livro:", error);
+        });
+    });
+});
+
+
+
+async function search(bookTitle, apiKey) {
+    const baseUrl = "https://www.googleapis.com/books/v1/volumes";
+    const params = {
+        q: bookTitle,
+        key: apiKey,
+    };
+
+    try {
+        const response = await fetch(`${baseUrl}?${new URLSearchParams(params)}`);
+        const data = await response.json();
+
+        if ('items' in data && data['items'].length > 0) {
+            const book = data['items'][0]['volumeInfo'];
+            const title = book.title || 'Título não disponível';
+            const coverUrl = book.imageLinks?.thumbnail || '';
+            return { title, coverUrl };
+        } else {
+            return { title: 'Título não encontrado', coverUrl: null };
+        }
+    } catch (error) {
+        console.error("Erro ao obter dados:", error);
+        throw error;
+    }
 }
+
+
 
 // Funções para abrir e fechar a tela de perfil
 document.getElementById('openProfileBtn').addEventListener('click', openProfile);
@@ -30,9 +108,6 @@ function deleteAccount() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("btnCarregarLivros").addEventListener("click", function() {
-        exibirLivros();
-    });
     Lendo();
 });
 
@@ -55,7 +130,9 @@ function Lendo(){
     .then(data => exibirLivros(data))
     .catch(error => console.error("Erro ao obter dados:", error));
 }
-
+document.getElementById("btnCarregarLivros").addEventListener("click", function() {
+    exibirLivros();
+});
 function exibirLivros() {
     const livros = [
         { titulo: "Lifsdg fjhgd sgj fgdskgsdhgk hdskgjhkds jhgkds jhgkj dshkj", capa: "/images/anão_home.jpg" },
@@ -65,6 +142,7 @@ function exibirLivros() {
     ];
  
     const livroLista = document.getElementById("bliblioteca");
+    livroLista.innerHTML = "";
 
     if (livroLista) {
         livros.forEach(livro => {

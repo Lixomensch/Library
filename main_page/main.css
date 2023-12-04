@@ -155,3 +155,30 @@ button {
     background-color: #363636;
 }
 
+.modalcover {
+    display: none;
+    position: fixed;
+    flex-grow: 1;
+    top: 70px; /* Ajuste conforme necessário para a posição desejada abaixo da barra de pesquisa */
+    left: 90px; 
+    width: 43%; /* Ajuste conforme necessário */
+    padding: 10px;
+    background-color: #ffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.modalcover-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.inserir{
+    display: flex;
+    width: 30%;
+    height: 3%;
+}
+#statusSelect{
+    margin: 10px;
+    border-radius: 10%;
+}

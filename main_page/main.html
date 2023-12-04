@@ -19,7 +19,7 @@
         </div>
         <div class="nav-links">
             <input type="text" id="searchInput" placeholder="Pesquisar...">
-            <button onclick="search()">Pesquisar</button>
+            <button id="searchButton">Pesquisar</button>
         </div>
         <button id="openProfileBtn" class="profile"> <img src="/images/profile.png" alt="profile" width="60px"
                 height="60px"> </button>
@@ -29,7 +29,7 @@
         <button onclick="exibirLivros()">Carregar Livros</button>
         <div class="subbarr">
             <button class="btnSub" onclick="Lendo()">Lendo</button>
-            <button class="btnSub" onclick="vouler()">Vou ler</button>    
+            <button class="btnSub" onclick="vouler()">Vou ler</button>
             <button class="btnSub" onclick="Terminei()">Terminei</button>
         </div>
         <div class="bliblioteca" id="bliblioteca"></div>
@@ -49,6 +49,20 @@
 
         </div>
     </div>
+
+    <div id="modalcover" class="modalcover">
+        <div class="modal-content" id="coverResult">
+        </div>
+        <div class="inserir">
+            <select id="statusSelect">
+                <option value="lendo">Lendo</option>
+                <option value="vouLer">Vou Ler</option>
+                <option value="concluido">Concluído</option>
+            </select>
+            <button id="insertBookButton">Inserir</button>
+        </div>
+    </div>
+
     <script src="main.js"></script>
 </body>
 

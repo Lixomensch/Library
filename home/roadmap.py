@@ -7,23 +7,6 @@ app = Flask(__name__)
 def db_connection():
     return sqlite3.connect('bancos.db')
 
-# COMEÇO DAS FUNÇÕES DOS LIVROS
-def search_book_cover(book_title, api_key):
-    base_url = "https://www.googleapis.com/books/v1/volumes"
-    params = {
-        'q': book_title,
-        'key': api_key,
-    }
-
-    response = requests.get(base_url, params=params)
-    data = response.json()
-
-    if 'items' in data and len(data['items']) > 0:
-        cover_url = data['items'][0]['volumeInfo'].get('imageLinks', {}).get('thumbnail', '')
-        return cover_url
-    else:
-        return None
-    
 def title_exists(titulo):
     with db_connection() as connection:
         cursor = connection.cursor()
