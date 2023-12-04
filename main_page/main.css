@@ -59,7 +59,7 @@ body {
 
 header {
     background-color: #333;
-    color: #fff;
+    color: #F5F5F5;
     padding: 10px;
     text-align: center;
 }
@@ -95,14 +95,12 @@ button {
     width: 300px;
     padding: 20px;
     background-color: #F5F5F5;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #fechar{
     background-color: #f44336;
-    color: #fff;
+    color: #F5F5F5;
     border: none;
     font-size: 14px;
     cursor: pointer;
@@ -131,6 +129,7 @@ button {
 }
 
 .livro{
+    background: none;
     margin: 5px;
     width: 100px;
     height: auto;
@@ -163,7 +162,7 @@ button {
     left: 90px; 
     width: 43%; /* Ajuste conforme necessário */
     padding: 10px;
-    background-color: #ffff;
+    background-color: #F5F5F5;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     z-index: 1;
 }
@@ -181,4 +180,24 @@ button {
 #statusSelect{
     margin: 10px;
     border-radius: 10%;
+}
+
+.modaldes{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    border-radius: 2%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #F5F5F5;
+    width: 50%;
+    min-width: 375px;
+    max-width: 400px;
+    height: 50%;
+    min-height: 350px;
+}
+.dedes-capa{
+    width: 70%;
+    height: 70%;
 }

@@ -87,7 +87,7 @@ async function search(bookTitle, apiKey) {
 
 // Funções para abrir e fechar a tela de perfil
 document.getElementById('openProfileBtn').addEventListener('click', openProfile);
-document.getElementById('closeProfileBtn').addEventListener('click', closeProfile);
+document.getElementById('fechar').addEventListener('click', closeProfile);
 
 function openProfile() {
     document.getElementById('profileModal').style.display = 'block';
@@ -146,7 +146,7 @@ function exibirLivros() {
 
     if (livroLista) {
         livros.forEach(livro => {
-            const livroElemento = document.createElement("div");
+            const livroElemento = document.createElement("button");
             livroElemento.className = "livro";
     
             const capaElemento = document.createElement("img");
@@ -161,10 +161,55 @@ function exibirLivros() {
             livroElemento.appendChild(capaElemento);
             livroElemento.appendChild(tituloElemento);
             
+            livroElemento.onclick = function () {
+                descrição(livro);
+            };
+
             livroLista.appendChild(livroElemento);
         });
     } else {
         console.error("Elemento com ID 'bliblioteca' não encontrado.");
     }
     
+}
+
+function descrição(livro){
+    const modal = document.getElementById("modaldes");
+    modal.style.display = "flex";
+
+    const livroElemento = document.getElementById("des-capa");
+    livroElemento.innerHTML = "";
+    const capaElemento = document.createElement("img");
+    capaElemento.style.width = "200px";
+    capaElemento.style.height = "250px";
+    capaElemento.src = livro.capa;
+
+    const tituloElemento = document.createElement("p");
+    tituloElemento.textContent = livro.titulo;
+    tituloElemento.style.margin = "0";
+
+    livroElemento.appendChild(capaElemento);
+    livroElemento.appendChild(tituloElemento);
+
+    document.addEventListener("mousedown", fecharModalFora);
+
+    // Função para fechar o modal se o clique ocorrer fora dele
+    function fecharModalFora(event) {
+        if (!modal.contains(event.target)) {
+            // O clique ocorreu fora do modal, então fecha o modal
+            modal.style.display = "none";
+            // Remove o evento de clique do documento para evitar interferências
+            document.removeEventListener("mousedown", fecharModalFora);
+        }
+    }
+
+    const button = document.getElementById("removeBookButton");
+    button.addEventListener("click", removerLivroDoBanco);
+
+    function removerLivroDoBanco(livro) {
+        // Lógica para remover o livro do banco de dados
+        // Substitua o conteúdo desta função com a lógica real de remoção
+        console.log("Removendo livro do banco de dados:", livro.titulo);
+        // Aqui você pode enviar uma solicitação para o servidor para remover o livro, por exemplo
+    }
 }
