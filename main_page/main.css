@@ -1,0 +1,158 @@
+/* Estilos globais */
+html {
+    margin: 0;
+    padding: 0;
+    background-color: #1C1C1C;
+}
+
+body {
+    margin: 0;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Estilos da barra de navegação */
+.navbar {   
+    background-color: #4F4F4F;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: block;
+    line-height: 0;
+}
+
+.nav-links {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 1%;
+}   
+
+.nav-links a:hover {
+    border-radius: 50%;
+    background-color: #696969;
+    box-shadow: 8px 8px 15px 12px rgba(205, 205, 205, 0.25);
+}
+
+.profile {
+    padding: 0 0;
+    background-color: #4F4F4F;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+/* Estilos do campo de pesquisa */
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+#searchInput {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: 50%;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Estilos para a tela de perfil flutuante */
+.modal{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 300px;
+    padding: 20px;
+    background-color: #F5F5F5;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#fechar{
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
+.barra{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#tsenha {
+    margin: 0;
+}
+
+.bliblioteca{
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    background-color: #4F4F4F;
+}
+
+.livro{
+    margin: 5px;
+    width: 100px;
+    height: auto;
+    max-height: 110px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.root{
+    padding: 30px;
+}
+
+.subbarr{
+    background-color: #363636;
+    border: white;
+    margin: 0;
+}
+
+.btnSub{
+    margin: 0;
+    border-radius: 0;
+    background-color: #363636;
+    border: ;
+}
+

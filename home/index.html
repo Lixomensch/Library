@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -13,7 +13,7 @@
         <div class="navbar">
             <div class="logo">
                 <a href="#">
-                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="50px" height="50px">
+                    <img src="{{ url_for('home', filename='logo.png') }}" alt="Logo" width="50px" height="50px">
                 </a>
             </div>
             <div class="nav-links">
@@ -30,7 +30,7 @@
                 <button onclick="abrirTelaFlutuante()" class="login-btn main_login">Start</button>
             </div>
             <div class="a_home">
-                <img src="{{ url_for('static', filename='anão_home.jpg') }}" alt="Logo" width="512px" height="512px">
+                <img src="{{ url_for('home', filename='anão_home.jpg') }}" alt="Logo" width="512px" height="512px">
             </div>
         </div>
         <div class="about">
@@ -89,7 +89,7 @@
                 <h2 id="seila">Cadastro</h2>
                 <button onclick="fecharTelaCadastro()" id="fechar">X</button>
             </div>
-            <form action="{{ url_for('static', filename='login.js') }}" method="post" onsubmit="return Cadsuccessful()">
+            <form action="{{ url_for('home', filename='login.js') }}" method="post" onsubmit="return Cadsuccessful()">
                 <label for="username">Nome:</label>
                 <input type="text" id="signupusername" name="username" required>
 
@@ -101,7 +101,7 @@
             </form>
         </div>
     </div>
-    <script defer src="{{ url_for('static', filename='login.js') }}"></script>
+    <script defer src="{{ url_for('home', filename='login.js') }}"></script>
 
 </body>
 
