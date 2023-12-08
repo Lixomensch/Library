@@ -32,7 +32,7 @@ async function submitLogin() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-    },
+    }, 
     body: JSON.stringify({
       username: username,
       password: password,
@@ -44,14 +44,24 @@ async function submitLogin() {
       {
         loginMessage.innerHTML = 'Invalid username or password';
         loginMessage.style.color = 'red';
+        return false;
       }
-      alert(data.message);
+      // Redirecionar para main.html após o login bem-sucedido
+      alert(data.message)
+      fetch('/main')
+      .then(response => response.text())
+      .then(html => {
+        window.location.href = '/main'; 
+      })
+      .catch(error => console.error('Erro na solicitação:', error));
+ 
   })
   .catch(error => {
       console.error("Erro ao enviar solicitação: ", error);
   })
+
   
-}
+} 
 
 async function submitCad() {
   var username = document.getElementById('signupusername').value;

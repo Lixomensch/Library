@@ -1,0 +1,252 @@
+/* Estilos globais */
+html {
+    margin: 0;
+    padding: 0;
+    background-color: #1C1C1C;
+}
+
+body {
+    margin: 0;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Estilos da barra de navegação */
+.navbar {   
+    background-color: #4F4F4F;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: block;
+    line-height: 0;
+}
+
+.nav-links {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 1%;
+}   
+
+.nav-links a:hover {
+    border-radius: 50%;
+    background-color: #696969;
+    box-shadow: 8px 8px 15px 12px rgba(205, 205, 205, 0.25);
+}
+
+.profile {
+    padding: 0 0;
+    background-color: #4F4F4F;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+/* Estilos do campo de pesquisa */
+
+header {
+    background-color: #333;
+    color: #F5F5F5;
+    padding: 10px;
+    text-align: center;
+}
+
+#searchInput {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: 50%;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Estilos para a tela de perfil flutuante */
+
+.modalcover {
+    display: none;
+    position: fixed;
+    flex-grow: 1;
+    top: 70px; /* Ajuste conforme necessário para a posição desejada abaixo da barra de pesquisa */
+    left: 90px; 
+    width: 43%; /* Ajuste conforme necessário */
+    padding: 10px;
+    background-color: #F5F5F5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+
+.modal{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+
+
+#fechar{
+    background-color: #f44336;
+    color: #F5F5F5;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
+.barra{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#tsenha {
+    margin: 0;
+}
+
+.bliblioteca{
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    background-color: #4F4F4F;
+}
+
+.livro{
+    background: none;
+    margin: 5px;
+    width: 100px;
+    height: auto;
+    max-height: 110px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.root{
+    padding: 30px;
+}
+
+.subbarr{
+    background-color: #363636;
+    border: white;
+    margin: 0;
+}
+
+.btnSub{
+    margin: 0;
+    border-radius: 0;
+    background-color: #363636;
+}
+
+
+.modal-content {
+    width: 100%;
+    padding: 20px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+}
+
+.modalcover-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.inserir{
+    display: flex;
+    width: 30%;
+    height: 3%;
+}
+#statusSelect{
+    margin: 10px;
+    border-radius: 10%;
+}
+
+.modaldes{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    border-radius: 2%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #F5F5F5;
+    width: 50%;
+    min-width: 375px;
+    max-width: 400px;
+    height: 50%;
+    min-height: 350px;
+}
+.dedes-capa{
+    width: 70%;
+    height: 70%;
+}
+
+/* CSS para os resultados dinamicos dos livros  */
+#modalcover {
+    display: none;
+    position: fixed;
+    flex-grow: 1;
+    top: 70px; 
+    left: 90px; 
+    width: 43%;
+    padding: 10px;
+    background-color: #F5F5F5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    height: 400px;
+}
+
+#coverResult {
+    padding: 20px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#result_dynamic_books {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    height: 144px;
+    margin: 5px;
+}
+
+#result_dynamic_books img{
+    height: 144px;
+    width: 96px; 
+    margin-right: 10px;
+}
+
+#titlecapaslivro{
+    flex: 1;
+    width: 100%;
+}
+
