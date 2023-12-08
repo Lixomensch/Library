@@ -1,11 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
 </head>
+
 <body>
-    
+
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="50px" height="50px">
+            </a>
+        </div>
+        <div class="nav-links">
+            <input type="text" id="searchInput" placeholder="Pesquisar...">
+            <button id="searchButton">Pesquisar</button>
+        </div>
+        <button id="openProfileBtn" class="profile"> <img src="{{ url_for('static', filename='profile.png') }}" alt="profile" width="60px"
+                height="60px"> </button>
+    </div>
+
+    <div class="root">
+        <button onclick="exibirLivros()">Carregar Livros</button>
+        <div class="subbarr">
+            <button class="btnSub" onclick="Lendo()">Lendo</button>
+            <button class="btnSub" onclick="vouler()">Vou ler</button>
+            <button class="btnSub" onclick="Terminei()">Terminei</button>
+        </div>
+        <div class="bliblioteca" id="bliblioteca"></div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="barra">
+                <h2>Nome do Usuário</h2>
+                <button onclick="closeProfile()" id="fechar">X</button>
+            </div>
+            <div class="barra">
+                <input type="text" id="searchInput" placeholder="Digite sua nova senha..."> <button
+                    onclick="changePassword()" id="tsenha">Trocar Senha</button>
+            </div>
+            <button onclick="deleteAccount()">Deletar Conta</button>
+
+        </div>
+    </div>
+
+    <div id="modalcover" class="modalcover">
+        <div class="modal-content" id="coverResult"></div>
+    </div>
+
+    <div id="modaldes" class="modaldes">
+        <div class="modal-content" id="des-capa">
+        </div>
+        <div class="remover">
+            <button id="removeBookButton">Remover</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
+
 </html>
