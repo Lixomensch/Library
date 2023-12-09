@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="50px" height="50px">
+            </a>
+        </div>
+        <div class="nav-links">
+            <input type="text" id="searchInput" placeholder="Pesquisar...">
+            <button id="searchButton">Pesquisar</button>
+        </div>
+        <button id="openProfileBtn" class="profile"> <img src="{{ url_for('static', filename='profile.png') }}" alt="profile" width="60px"
+                height="60px"> </button>
+    </div>
+
+    <div class="root" id="root">
+        <h2>Lendo</h2>
+        <div class="biblioteca_lendo" id="biblioteca"></div>
+        <h2>Quero ler</h2>
+        <div class="biblioteca_vouler" id="biblioteca"></div>
+        <h2>Terminei</h2>
+        <div class="biblioteca_terminei" id="biblioteca"></div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="barra">
+                <h2 id="nome_user">Nome do Usuário</h2>
+                <button onclick="closeProfile()" id="fechar">X</button>
+            </div>
+            <div class="barra">
+                <input type="text" id="searchInput" placeholder="Digite sua nova senha..."> <button
+                    onclick="changePassword()" id="tsenha">Trocar Senha</button>
+            </div>
+            <button onclick="deleteAccount()">Deletar Conta</button>
+
+        </div>
+    </div>
+
+    <div id="modalcover" class="modalcover">
+        <div class="modal-content" id="coverResult">
+        </div>
+    </div>
+
+    <div id="modaldes" class="modaldes" style="display: none;">
+        <div class="superior_modaldes" id="superior_modaldes"></div>
+        <div class="inferior_modaldes" id="inferior_modaldes"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+
+</html>
