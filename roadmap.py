@@ -1,8 +1,11 @@
-from flask import Flask, render_template, jsonify, request, make_response
+from flask import Flask, render_template, jsonify, request, make_response, session
 import requests
 import sqlite3
 
 app = Flask(__name__)
+
+# Defina uma chave secreta única e secreta
+app.secret_key = 'sua_chave_secreta_aqui'
 
 def db_connection():
     return sqlite3.connect('bancos.db')
@@ -12,7 +15,7 @@ def id_book(titulo):
     with db_connection() as connection:
         cursor = connection.cursor()
         consulta = "SELECT id FROM livros WHERE titulo=?"
-        cursor.execute(consulta,(titulo))
+        cursor.execute(consulta,(titulo,))
         resultados = cursor.fetchall()
         if resultados:
             return resultados[0][0]
@@ -32,7 +35,7 @@ def include_book(titulo,capa,description):
     else:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "INSERT INTO livros (titulo,capa) VALUES (?, ?,?);"
+            consulta = "INSERT INTO livros (titulo,capa,descricao) VALUES (?, ?, ?);"
             cursor.execute(consulta,(titulo,capa,description))
             connection.commit()
             return True
@@ -81,7 +84,7 @@ def id_username(username):
     with db_connection() as connection:
         cursor = connection.cursor()
         consulta = "SELECT id FROM usuario WHERE username=?"
-        cursor.execute(consulta,(username))
+        cursor.execute(consulta,(username,))
         resultados = cursor.fetchall()
         if resultados:
             return resultados[0][0]
@@ -93,7 +96,10 @@ def get_login_from_database(username, password):
         consulta = "SELECT COUNT(*) FROM usuario WHERE username=? AND password=?;"
         cursor.execute(consulta, (username, password))
         resultados = cursor.fetchall()
-        return resultados[0][0]
+        if resultados and resultados[0][0] > 0:
+            session['username'] = username
+
+        return resultados[0][0] if resultados else 0
     
 def get_signup_from_database(username, password):
     if username_exists(username):
@@ -153,7 +159,7 @@ def add_livros_lidos(username, titulo,capa,description):
         include_book(titulo,capa,description)
     user_id = id_username(username)
     livro_id = id_book(titulo)
-    if user_id == -1:
+    if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "INSERT INTO livros_lidos (id_usuario,id_livro) VALUES (?, ?);"
@@ -165,7 +171,7 @@ def add_livros_lidos(username, titulo,capa,description):
 def remove_livros_lidos(username, titulo):
     user_id = id_username(username)
     livro_id = id_book(titulo)
-    if user_id == -1:
+    if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "DELETE FROM livros_lidos WHERE id_usuario=? AND id_livro=?;"
@@ -193,20 +199,20 @@ def add_livros_lendo(username, titulo, capa, description):
         include_book(titulo,capa,description)
     user_id = id_username(username)
     livro_id = id_book(titulo)
-    if user_id == -1:
+    if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "INSERT INTO livros_lendo (id_usuario,id_livro) VALUES (?, ?);"
             cursor.execute(consulta, (user_id, livro_id))
             connection.commit()
-        return True
-    return False
+        return 1
+    return 0
         
 
 def remove_livros_lendo(username, titulo):
     user_id = id_username(username)
     livro_id = id_book(titulo)
-    if user_id == -1:
+    if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "DELETE FROM livros_lendo WHERE id_usuario=? AND id_livro=?;"
@@ -234,7 +240,7 @@ def add_livros_a_ler(username, titulo,capa,description):
         include_book(titulo,capa,description)
     user_id = id_username(username)
     livro_id = id_book(titulo)
-    if user_id == -1:
+    if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "INSERT INTO livros_a_ler (id_usuario,id_livro) VALUES (?, ?);"
@@ -246,7 +252,7 @@ def add_livros_a_ler(username, titulo,capa,description):
 def remove_livros_a_ler(username, titulo):
     user_id = id_username(username)
     livro_id = id_book(titulo)
-    if user_id == -1:
+    if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "DELETE FROM livros_a_ler WHERE id_usuario=? AND id_livro=?;"
@@ -317,7 +323,7 @@ def cadastrar():
 @app.route('/alterar-usuario', methods=['POST'])
 def mudar():
     data = request.get_json()
-    username = data.get('username')
+    username = session['username']
     password = data.get('password')
     new_password = data.get('new_password')
     username = username.lower()
@@ -335,7 +341,7 @@ def mudar():
 @app.route('/deletar-usuario', methods=['POST'])
 def deletar():
     data = request.get_json()
-    username = data.get('username')
+    username = session['username']
     password = data.get('password')
     username = username.lower()
     try:
@@ -349,8 +355,7 @@ def deletar():
     
 @app.route('/get-livros', methods=['POST'])
 def all_livros():
-    data = request.get_json()
-    username = data.get('username')
+    username = session['username']
     try:
         select_in_livros_a_ler(username)
         select_in_livros_lendo(username)
@@ -363,7 +368,7 @@ def all_livros():
 def set_Quero_ler():
     data = request.get_json()
 
-    username = data.get('username')
+    username = session['username']
     titulo = data.get('titulo')
     capa = data.get('capa')
     description = data.get('description')
@@ -378,7 +383,7 @@ def set_Quero_ler():
 def set_Lendo():
     data = request.get_json()
 
-    username = data.get('username')
+    username = session['username']
     titulo = data.get('titulo')
     capa = data.get('capa')
     description = data.get('description')
@@ -393,12 +398,12 @@ def set_Lendo():
 def set_Terminei():
     data = request.get_json()
 
-    username = data.get('username')
+    username = session['username']
     titulo = data.get('titulo')
     capa = data.get('capa')
     description = data.get('description')
     
-    if username and titulo and capa:
+    if titulo and capa:
         resultado = add_livros_lidos(username, titulo, capa, description)
         return jsonify({'success': resultado})
     else:
