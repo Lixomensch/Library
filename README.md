@@ -53,7 +53,7 @@ Library é um projeto de biblioteca online dedicado a simplificar e organizar su
 8. **Copie o link após "Running on ...":** Após iniciar o aplicativo, procure pela mensagem "Running on" no terminal. Você verá algo semelhante a:
     
     ```bash
-    Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+    Running on http://127.0.0.1:5500
     ```
     
     Copie o link que começa com `(http://127.0.0.1:5500)/` ou `http://localhost:5500/`. Este é o endereço onde o aplicativo está sendo executado localmente.
