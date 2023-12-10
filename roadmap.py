@@ -26,14 +26,14 @@ def title_exists(titulo):
         resultados = cursor.fetchall()
         return len(resultados) > 0    
 
-def include_book(titulo,capa):
+def include_book(titulo,capa,description):
     if title_exists(titulo):
         return False
     else:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "INSERT INTO livros (titulo,capa) VALUES (?, ?);"
-            cursor.execute(consulta,(titulo,capa))
+            consulta = "INSERT INTO livros (titulo,capa) VALUES (?, ?,?);"
+            cursor.execute(consulta,(titulo,capa,description))
             connection.commit()
             return True
         
@@ -148,9 +148,9 @@ def select_in_livros_lidos(username):
                 return resultados[0][0]
     return False
 
-def add_livros_lidos(username, titulo,capa):
+def add_livros_lidos(username, titulo,capa,description):
     if title_exists(titulo) == False:
-        include_book(titulo,capa)
+        include_book(titulo,capa,description)
     user_id = id_username(username)
     livro_id = id_book(titulo)
     if user_id == -1:
@@ -188,9 +188,9 @@ def select_in_livros_lendo(username):
                 return resultados[0][0]
     return False
 
-def add_livros_lendo(username, titulo,capa):
+def add_livros_lendo(username, titulo, capa, description):
     if title_exists(titulo) == False:
-        include_book(titulo,capa)
+        include_book(titulo,capa,description)
     user_id = id_username(username)
     livro_id = id_book(titulo)
     if user_id == -1:
@@ -229,9 +229,9 @@ def select_in_livros_a_ler(username):
                 return resultados[0][0]
     return False         
 
-def add_livros_a_ler(username, titulo,capa):
+def add_livros_a_ler(username, titulo,capa,description):
     if title_exists(titulo) == False:
-        include_book(titulo,capa)
+        include_book(titulo,capa,description)
     user_id = id_username(username)
     livro_id = id_book(titulo)
     if user_id == -1:
@@ -346,13 +346,6 @@ def deletar():
                 return jsonify({'success': False, 'message': 'User not found'})
     except Exception as e:
         app.logger.error(f"An error occurred during user deletion: {e}")
-
-@app.route('/set-Lendo',methods=['POST'])
-def addLendo():
-    data = request.get_json()
-
-
-
     
 @app.route('/get-livros', methods=['POST'])
 def all_livros():
@@ -366,6 +359,50 @@ def all_livros():
     except:
         return jsonify({'success': False, 'message': 'Books not found'})
 
+@app.route('/set_Quero_ler', methods=['POST'])
+def set_Quero_ler():
+    data = request.get_json()
+
+    username = data.get('username')
+    titulo = data.get('titulo')
+    capa = data.get('capa')
+    description = data.get('description')
+    
+    if username and titulo and capa:
+        resultado = add_livros_a_ler(username, titulo, capa, description)
+        return jsonify({'success': resultado})
+    else:
+        return jsonify({'error': 'Parâmetros inválidos'}), 400
+    
+@app.route('/set_Lendo', methods=['POST'])
+def set_Lendo():
+    data = request.get_json()
+
+    username = data.get('username')
+    titulo = data.get('titulo')
+    capa = data.get('capa')
+    description = data.get('description')
+    
+    if username and titulo and capa:
+        resultado = add_livros_lendo(username, titulo, capa, description)
+        return jsonify({'success': resultado})
+    else:
+        return jsonify({'error': 'Parâmetros inválidos'}), 400
+    
+@app.route('/set_Terminei', methods=['POST'])
+def set_Terminei():
+    data = request.get_json()
+
+    username = data.get('username')
+    titulo = data.get('titulo')
+    capa = data.get('capa')
+    description = data.get('description')
+    
+    if username and titulo and capa:
+        resultado = add_livros_lidos(username, titulo, capa, description)
+        return jsonify({'success': resultado})
+    else:
+        return jsonify({'error': 'Parâmetros inválidos'}), 400
 
 if __name__ == '__main__':
     app.run(port=5500, debug=True)

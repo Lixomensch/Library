@@ -1,9 +1,9 @@
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("nome_user").textContent = localStorage.getItem("username").toUpperCase()
 
-    document.addEventListener("click", function(event) {
+    document.addEventListener("click", function (event) {
         // Verifica se o elemento clicado não está dentro do modal
         if (!document.getElementById("modalcover").contains(event.target)) {
             document.getElementById("modalcover").style.display = "none";
@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Barra de pesquisa
 
-function separaStrignarry(inputString) 
-{ //transforma uma string em um array de palavras
+function separaStrignarry(inputString) { //transforma uma string em um array de palavras
     const processedString = inputString.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-z\s]/g, ' ');
 
     // Utiliza o método split para dividir a string em palavras
@@ -24,8 +23,7 @@ function separaStrignarry(inputString)
     return wordsArray;
 }
 
-function temItemIgual(array1, array2) 
-{ //Função que verifica se tem um elemento igual nos dois arrays
+function temItemIgual(array1, array2) { //Função que verifica se tem um elemento igual nos dois arrays
     for (const item1 of array1) {
         if (array2.includes(item1)) {
             return true;
@@ -35,7 +33,7 @@ function temItemIgual(array1, array2)
 }
 
 
-let isSearching = false; 
+let isSearching = false;
 
 
 document.getElementById("searchInput").addEventListener("keyup", function (event) {
@@ -50,8 +48,7 @@ document.getElementById("searchButton").addEventListener("click", function (even
     }
 });
 
-async function bt_pesquisar(event)
-{
+async function bt_pesquisar(event) {
     //* Botão Pesquisar
     if (event) {
         event.preventDefault();
@@ -61,7 +58,7 @@ async function bt_pesquisar(event)
         return;
     }
 
-    isSearching = true; 
+    isSearching = true;
 
     const searchInput = document.getElementById("searchInput");
     const coverResult = document.getElementById("coverResult");
@@ -88,10 +85,10 @@ async function bt_pesquisar(event)
 
                     // Adicionar o elemento ao conjunto
                     booksToPreserve.set(book.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-z\s]/g, ''), bookElement);
-                
+
                     // Adicionar evento de clique
-                    bookElement.addEventListener("click", function() {
-                        cover.style.display="none";
+                    bookElement.addEventListener("click", function () {
+                        cover.style.display = "none";
                         const livro = { capa: book.coverUrl, titulo: book.title, description: book.description };
                         descrição(livro);
                     });
@@ -106,7 +103,7 @@ async function bt_pesquisar(event)
         } catch (error) {
             console.error("Erro durante a busca:", error);
         } finally {
-            isSearching = false; 
+            isSearching = false;
         }
     }
 }
@@ -188,42 +185,77 @@ function deleteAccount() {
     alert('Implemente a lógica para deletar a conta aqui.');
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     Lendo();
 });
-/*
-function set_livro(){
-    fetch("/Terminei")
+
+function enviarRequisicao(rota, livro) {
+    fetch(rota, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            titulo: livro.titulo,
+            capa: livro.capa,
+            description: livro.description
+        }),
+    })
     .then(response => response.json())
-    .then(data => exibirLivros(data))
-    .catch(error => console.error("Erro ao obter dados:", error));
+    .then(data => {
+        if (data.success) {
+            alert("Livro incluído com sucesso!");
+        } else {
+            alert("Erro ao incluir o livro.");
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+    });
+}
 
+function set_livro(livro) {
+    var selectElement = document.getElementById("select_modaldes");
+    var selectedValue = selectElement.value;
 
-    switch (op)
-    {
+    if (selectedValue !== "basic_op") {
+        switch (selectedValue) {
+            case "Lendo_op":
+                enviarRequisicao('/set_Lendo', livro);
+                break;
+            case "Quero_ler_op":
+                enviarRequisicao('/set_Quero_ler', livro);
+                break;
+            case "Terminei_op":
+                enviarRequisicao('/set_Terminei', livro);
+                break;
+            default:
+                alert("Opção inválida");
+        }
     }
 }
 
-
-function get_livros(){
+/*
+function get_livros() {
     fetch("/Terminei")
-    .then(response => response.json())
-    .then(data => exibirLivros(data))
-    .catch(error => console.error("Erro ao obter dados:", error));
+        .then(response => response.json())
+        .then(data => exibirLivros(data))
+        .catch(error => console.error("Erro ao obter dados:", error));
 }
 
-document.getElementById("btnCarregarLivros").addEventListener("click", function() {
+document.getElementById("btnCarregarLivros").addEventListener("click", function () {
     exibirLivros();
 });
 */
+
 function exibirLivros() {
     const livros = [
         { titulo: "Lifsdg fjhgd sgj fgdskgsdhgk hdskgjhkds jhgkds jhgkj dshkj", capa: "/images/anão_home.jpg" },
-        { titulo: "Livro 2", capa: "/images/anão_home.jpg"  },
-        { titulo: "Livro 3", capa: "/images/anão_home.jpg"  },
+        { titulo: "Livro 2", capa: "/images/anão_home.jpg" },
+        { titulo: "Livro 3", capa: "/images/anão_home.jpg" },
         // Adicione mais livros conforme necessário
     ];
- 
+
     const livroLista = document.getElementById("bliblioteca");
     livroLista.innerHTML = "";
 
@@ -231,19 +263,19 @@ function exibirLivros() {
         livros.forEach(livro => {
             const livroElemento = document.createElement("button");
             livroElemento.className = "livro";
-    
+
             const capaElemento = document.createElement("img");
             capaElemento.style.width = "70px";
             capaElemento.style.height = "80px";
             capaElemento.src = livro.capa;
-            
+
             const tituloElemento = document.createElement("p");
             tituloElemento.textContent = livro.titulo;
             tituloElemento.style.margin = "0";
 
             livroElemento.appendChild(capaElemento);
             livroElemento.appendChild(tituloElemento);
-            
+
             livroElemento.onclick = function () {
                 descrição(livro);
             };
@@ -253,11 +285,10 @@ function exibirLivros() {
     } else {
         console.error("Elemento com ID 'bliblioteca' não encontrado.");
     }
-    
+
 }
 
-function descrição(livro)
-{
+function descrição(livro) {
     const modal = document.getElementById("modaldes");
     modal.style.display = "flex";
 
@@ -269,11 +300,11 @@ function descrição(livro)
     const selectbox_modaldes = document.createElement("select");
     selectbox_modaldes.setAttribute("id", "select_modaldes");
     selectbox_modaldes.classList.add("select_modaldes")
-    selectbox_modaldes.innerHTML+=`<option value="basic_op">-</option>`;
-    selectbox_modaldes.innerHTML+=`<option value="Lendo_op">Lendo</option>`;
-    selectbox_modaldes.innerHTML+=`<option value="Quero_ler_op">Quero ler</option>`;
-    selectbox_modaldes.innerHTML+=`<option value="Terminei_op">Terminei</option>`;
-    
+    selectbox_modaldes.innerHTML += `<option value="basic_op">-</option>`;
+    selectbox_modaldes.innerHTML += `<option value="Lendo_op">Lendo</option>`;
+    selectbox_modaldes.innerHTML += `<option value="Quero_ler_op">Quero ler</option>`;
+    selectbox_modaldes.innerHTML += `<option value="Terminei_op">Terminei</option>`;
+
     const capaElemento = document.createElement("img");
     capaElemento.setAttribute("id", "capa_modaldes");
     capaElemento.classList.add("capa_modaldes")
@@ -288,7 +319,7 @@ function descrição(livro)
     description.textContent = livro.description;
     description.setAttribute("id", "description_modaldes");
     description.classList.add("description_modaldes")
-    
+
     superior_modaldes.appendChild(capaElemento);
     superior_modaldes.appendChild(tituloElemento);
     inferior_modaldes.appendChild(selectbox_modaldes)
@@ -301,9 +332,7 @@ function descrição(livro)
         if (!modal.contains(event.target)) {
             // O clique ocorreu fora do modal, então fecha o modal
             modal.style.display = "none";
-            
-            if ()
-
+            set_livro(livro)
             document.removeEventListener("mousedown", fecharModalFora);
         }
     }
