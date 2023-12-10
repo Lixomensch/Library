@@ -18,7 +18,7 @@
             </a>
         </div>
         <div class="nav-links">
-            <input type="text" id="searchInput" placeholder="Pesquisar...">
+            <input type="text" class="searchInput" id="searchInput" placeholder="Pesquisar...">
             <button id="searchButton">Pesquisar</button>
         </div>
         <button id="openProfileBtn" class="profile"> <img src="{{ url_for('static', filename='profile.png') }}" alt="profile" width="60px"
@@ -41,10 +41,12 @@
                 <button onclick="closeProfile()" id="fechar">X</button>
             </div>
             <div class="barra">
-                <input type="text" id="searchInput" placeholder="Digite sua nova senha..."> <button
-                    onclick="changePassword()" id="tsenha">Trocar Senha</button>
+                <input type="password" class="searchInput" id="input_senha_old" placeholder="Digite sua senha antiga..."> 
+                <input type="password"class="searchInput"  id="input_senha_new" placeholder="Digite sua nova senha..."> 
+                <button onclick="changePassword()" id="tsenha">Trocar Senha</button>
             </div>
             <button onclick="deleteAccount()">Deletar Conta</button>
+            <button class="sairdaAccount" id="sairdaAccount" onclick="sairdaAccount()">Sair da Conta</button>
 
         </div>
     </div>

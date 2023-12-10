@@ -1,6 +1,4 @@
-
-
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("nome_user").textContent = localStorage.getItem("username").toUpperCase()
 
     document.addEventListener("click", function (event) {
@@ -9,6 +7,28 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("modalcover").style.display = "none";
         }
     });
+
+    await fetch('/get-livros', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Verifique se a solicitação foi bem-sucedida
+            if (data) {
+                exibirLivros("biblioteca_lendo", data.success.lendo);
+                exibirLivros("biblioteca_vouler", data.success.livros_a_ler);
+                exibirLivros("biblioteca_terminei", data.success.lidos);
+            } else {
+                // Trate o caso em que não há livros encontrados
+                console.error('Erro ao obter livros:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro na solicitação:', error);
+        });
 });
 
 
@@ -32,9 +52,7 @@ function temItemIgual(array1, array2) { //Função que verifica se tem um elemen
     return false;
 }
 
-
 let isSearching = false;
-
 
 document.getElementById("searchInput").addEventListener("keyup", function (event) {
     if (!isSearching) {
@@ -87,10 +105,10 @@ async function bt_pesquisar(event) {
                     booksToPreserve.set(book.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-z\s]/g, ''), bookElement);
 
                     // Adicionar evento de clique
-                    bookElement.addEventListener("click", function () {
+                    bookElement.addEventListener("click", async function () {
                         cover.style.display = "none";
-                        const livro = { capa: book.coverUrl, titulo: book.title, description: book.description };
-                        descrição(livro);
+                        const livro = { capa: book.coverUrl, titulo: book.title, descricao: book.description };
+                        descrição(livro, "basic_op");
                     });
                 }
             });
@@ -158,17 +176,59 @@ function closeProfile() {
     document.getElementById('profileModal').style.display = 'none';
 }
 
-function changePassword() {
-    // Lógica para a troca de senha
-    alert('Implemente a lógica para trocar a senha aqui.');
+async function changePassword() {
+
+
+    if(document.getElementById("input_senha_new").value =="" ||  document.getElementById("input_senha_old").value=="")
+    {
+        alert("Os campos devem ser preenchidos.");
+        return true;
+    }
+
+    await fetch('/alterar-usuario', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            password: document.getElementById("input_senha_old").value,
+            new_password:  document.getElementById("input_senha_new").value,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Senha trocada com sucesso!");
+            window.location.reload();
+        } else {
+            alert(data.success);
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+    });
+       
 }
 
 function deleteAccount() {
-    // Lógica para excluir a conta
-    alert('Implemente a lógica para deletar a conta aqui.');
+    fetch('/deletar-usuario');
+    sairdaAccount();
 }
 
-function enviarRequisicao(rota, livro) {
+function sairdaAccount(){
+    localStorage.removeItem("username")
+    fetch('/')
+      .then(response => response.text())
+      .then(html => {
+        window.history.replaceState({}, document.title, '/');
+        window.location.href = '/';
+        window.location.reload();
+      })
+      .catch(error => console.error('Erro na solicitação:', error));
+}
+
+function setar_livro_database(rota, livro) {
+    console.log(rota, " ", livro);
     fetch(rota, {
         method: 'POST',
         headers: {
@@ -177,66 +237,57 @@ function enviarRequisicao(rota, livro) {
         body: JSON.stringify({
             titulo: livro.titulo,
             capa: livro.capa,
-            description: livro.description
+            description: livro.descricao
         }),
     })
         .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Livro incluído com sucesso!");
-            } else {
-                alert("Erro ao incluir o livro.");
-            }
-        })
         .catch(error => {
             console.error('Erro na requisição:', error);
         });
+
+    window.location.reload();
 }
 
-function set_livro(livro) {
-    var selectElement = document.getElementById("select_modaldes");
-    var selectedValue = selectElement.value;
-
-    if (selectedValue !== "basic_op") {
-        switch (selectedValue) {
-            case "Lendo_op":
-                enviarRequisicao('/set_Lendo', livro);
-                break;
-            case "Quero_ler_op":
-                enviarRequisicao('/set_Quero_ler', livro);
-                break;
-            case "Terminei_op":
-                enviarRequisicao('/set_Terminei', livro);
-                break;
-            default:
-                alert("Opção inválida");
-        }
-    }
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-    fetch('/get-livros', {
+async function remover_livro_database(livro){
+    await fetch('/deletar_livro', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+            titulo: livro.titulo,
+        }),
     })
         .then(response => response.json())
-        .then(data => {
-            // Verifique se a solicitação foi bem-sucedida
-            if (data.success.lendo) {
-                exibirLivros("biblioteca_lendo", data.success.lendo);
-                exibirLivros("biblioteca_vouler", data.success.livros_a_ler);
-                exibirLivros("biblioteca_terminei", data.success.lidos);
-            } else {
-                // Trate o caso em que não há livros encontrados
-                console.error('Erro ao obter livros:', data.message);
-            }
-        })
         .catch(error => {
-            console.error('Erro na solicitação:', error);
+            console.error('Erro na requisição:', error);
         });
-});
+
+    window.location.reload();
+}
+
+async function set_livro(livro) {
+    var selectElement = document.getElementById("select_modaldes");
+    var selectedValue = selectElement.value;
+
+
+    switch (selectedValue) 
+    {
+        case "Lendo_op":
+            await setar_livro_database('/set_Lendo', livro);
+            break;
+        case "Quero_ler_op":
+            await setar_livro_database('/set_Quero_ler', livro);
+            break;
+        case "Terminei_op":
+            await setar_livro_database('/set_Terminei', livro);
+            break;
+        default:
+            await remover_livro_database(livro);
+            break;
+    }
+
+}
 
 function exibirLivros(categoria, livros) {
     const livroLista = document.getElementById(categoria);
@@ -244,25 +295,18 @@ function exibirLivros(categoria, livros) {
 
     if (livroLista) {
         livros.forEach(livro => {
-            const livroElemento = document.createElement("button");
-            livroElemento.className = "livro";
 
             const capaElemento = document.createElement("img");
-            capaElemento.style.width = "70px";
-            capaElemento.style.height = "80px";
-            capaElemento.src = livro.capa;
-            const tituloElemento = document.createElement("p");
-            tituloElemento.textContent = livro.titulo;
-            tituloElemento.style.margin = "0";
+            capaElemento.setAttribute("id", "img_capas_livro");
+            capaElemento.src = livro[2];
 
-            livroElemento.appendChild(capaElemento);
-            livroElemento.appendChild(tituloElemento);
+            livroLista.appendChild(capaElemento);
 
-            livroElemento.onclick = function () {
-                descrição(livro);
-            };
+            capaElemento.addEventListener("click", async function () {
+                const book = { capa: livro[2], titulo: livro[1], descricao: livro[3] };
+                descrição(book, categoria);
+            });
 
-            livroLista.appendChild(livroElemento);
         });
     } else {
         console.error("Elemento com ID 'bliblioteca' não encontrado.");
@@ -270,7 +314,7 @@ function exibirLivros(categoria, livros) {
 
 }
 
-function descrição(livro) {
+async function descrição(livro, opcao) {
     const modal = document.getElementById("modaldes");
     modal.style.display = "flex";
 
@@ -286,6 +330,11 @@ function descrição(livro) {
     selectbox_modaldes.innerHTML += `<option value="Lendo_op">Lendo</option>`;
     selectbox_modaldes.innerHTML += `<option value="Quero_ler_op">Quero ler</option>`;
     selectbox_modaldes.innerHTML += `<option value="Terminei_op">Terminei</option>`;
+
+    if (opcao === "biblioteca_lendo") opcao = "Lendo_op";
+    else if (opcao === "biblioteca_vouler") opcao = "Quero_ler_op"
+    else if (opcao === "biblioteca_terminei") opcao = "Terminei_op"
+    selectbox_modaldes.value = opcao;
 
     const capaElemento = document.createElement("img");
     capaElemento.setAttribute("id", "capa_modaldes");

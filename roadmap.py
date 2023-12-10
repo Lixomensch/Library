@@ -8,7 +8,9 @@ app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_aqui'
 
 def db_connection():
-    return sqlite3.connect('bancos.db')
+    db = sqlite3.connect('bancos.db')
+    db.execute("PRAGMA foreign_keys = ON")
+    return db
 
 # COMEÇO DAS FUNÇÕES DOS LIVROS  
 def id_book(titulo):
@@ -101,6 +103,8 @@ def get_login_from_database(username, password):
 
         return resultados[0][0] if resultados else 0
     
+
+    
 def get_signup_from_database(username, password):
     if username_exists(username):
         return -1  # Nome de usuário já existe, cadastro falhado
@@ -114,29 +118,36 @@ def get_signup_from_database(username, password):
     return 0 # erro com database        
 
 def get_update_from_database(username,password,new_password):
+    if username_exists(username) and get_password(username=username, password=password)==1:
+        with db_connection() as connection:
+            print("oiiiiiiiiiii")
+            cursor = connection.cursor()
+            consulta = "UPDATE usuario SET password=? WHERE username=?;"
+            cursor.execute(consulta,(new_password, username))
+            connection.commit()
+            return True
+    return False
+
+def get_password(username,password):
     if username_exists(username):
         with db_connection() as connection:
             cursor = connection.cursor()
-            resultado = cursor.fetchone()
-            if resultado is not None:
-                consulta = "UPDATE usuario SET password=? WHERE username=?;"
-                cursor.execute(consulta,(new_password))
-                connection.commit()
-                return True
-            else:
-                return False
+            consulta = "SELECT COUNT (*) FROM usuario WHERE username=? AND password=? ORDER BY password;"
+            cursor.execute(consulta,(username,password))
+            return True
+    else:
+        return False    
+            
 
-def delete_user_from_database(username,password):
+def delete_user_from_database(username):
     with db_connection() as connection:
         cursor = connection.cursor()
-        resultado = cursor.fetchone()
-        if resultado is not None:
-            consulta2 = "DELETE FROM usuario WHERE username=? AND password=?;"
-            cursor.execute(consulta2,(username,password))
-            connection.commit()
-            return True
-        else:
-            return False
+        consulta2 = "DELETE FROM usuario WHERE username=?;"
+        cursor.execute(consulta2,(username,))
+        connection.commit()
+        return True
+    return False
+        
 # FIM DAS FUNÇÕES USUÁRIO
 
 #COMEÇO DAS FUNÇÕES BIBLIOTECA
@@ -146,6 +157,7 @@ def select_in_livros_lidos(username):
     user_id = id_username(username)
     if user_id != -1:
         with db_connection() as connection:
+            
             cursor = connection.cursor()
             consulta = "SELECT livros.* FROM livros JOIN livros_lidos ON livros_lidos.id_usuario = ? WHERE livros_lidos.id_livro = livros.id;"
             cursor.execute(consulta, (user_id,))
@@ -171,6 +183,7 @@ def remove_livros_lidos(username, titulo):
     user_id = id_username(username)
     livro_id = id_book(titulo)
     if user_id != -1:
+        
         with db_connection() as connection:
             cursor = connection.cursor()
             consulta = "DELETE FROM livros_lidos WHERE id_usuario=? AND id_livro=?;"
@@ -186,7 +199,7 @@ def select_in_livros_lendo(username):
     if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "SELECT livros.* FROM livros JOIN livros_lendo ON livros_lendo.id_usuario = ? WHERE livros_lendo.id_livro = livros.id;"
+            consulta = "SELECT livros. * FROM livros JOIN livros_lendo ON livros_lendo.id_usuario = ? WHERE livros_lendo.id_livro = livros.id;"
             cursor.execute(consulta, (user_id,))
             resultados = cursor.fetchall()
             return resultados
@@ -226,7 +239,7 @@ def select_in_livros_a_ler(username):
     if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "SELECT livros.* FROM livros JOIN livros_a_ler ON livros_a_ler.id_usuario = ? WHERE livros_a_ler.id_livro = livros.id;"
+            consulta = "SELECT livros. * FROM livros JOIN livros_a_ler ON livros_a_ler.id_usuario = ? WHERE livros_a_ler.id_livro = livros.id;"
             cursor.execute(consulta, (user_id,))
             resultados = cursor.fetchall()
             return resultados
@@ -323,30 +336,25 @@ def mudar():
     username = session['username']
     password = data.get('password')
     new_password = data.get('new_password')
-    username = username.lower()
+    
     try:
-            if username_exists(username):
-                get_update_from_database(username,password,new_password)
+        if username_exists(username):
+            if(get_update_from_database(username,password,new_password) == True):
                 return jsonify({'success': True, 'message': 'Update successful'})
             else:
-                return jsonify({'success': False, 'message': 'User not found'})
+                return jsonify({'success': False, 'message': 'Senha incorreta.'})
+        else:
+            return jsonify({'success': False, 'message': 'User not found'})
     except Exception as e:
         app.logger.error(f"An error occurred during user update: {e}")
        
 
 
-@app.route('/deletar-usuario', methods=['POST'])
+@app.route('/deletar-usuario')
 def deletar():
-    data = request.get_json()
-    username = session['username']
-    password = data.get('password')
-    username = username.lower()
+    
     try:
-            if username_exists(username):
-                delete_user_from_database(username,password)
-                return jsonify({'success': True, 'message': 'Deletion successful'})
-            else:
-                return jsonify({'success': False, 'message': 'User not found'})
+        delete_user_from_database(session['username'])
     except Exception as e:
         app.logger.error(f"An error occurred during user deletion: {e}")
     
@@ -356,19 +364,22 @@ def all_livros():
 
     livros_a_ler = select_in_livros_a_ler(username)
     lendo = select_in_livros_lendo(username)
-    lidos = select_in_livros_lidos(username)     
+    lidos = select_in_livros_lidos(username)    
     return jsonify({'success': {'livros_a_ler': livros_a_ler, 'lendo': lendo, 'lidos': lidos}})
 
 @app.route('/set_Quero_ler', methods=['POST'])
 def set_Quero_ler():
     data = request.get_json()
-
+    
     username = session['username']
     titulo = data.get('titulo')
     capa = data.get('capa')
     description = data.get('description')
     
     if username and titulo and capa:
+        remove_livros_lidos(username, titulo)
+        remove_livros_lendo(username, titulo) 
+        remove_livros_a_ler(username, titulo)
         resultado = add_livros_a_ler(username, titulo, capa, description)
         return jsonify({'success': resultado})
     else:
@@ -384,6 +395,9 @@ def set_Lendo():
     description = data.get('description')
     
     if username and titulo and capa:
+        remove_livros_lidos(username, titulo)
+        remove_livros_lendo(username, titulo) 
+        remove_livros_a_ler(username, titulo)
         resultado = add_livros_lendo(username, titulo, capa, description)
         return jsonify({'success': resultado})
     else:
@@ -399,10 +413,28 @@ def set_Terminei():
     description = data.get('description')
     
     if titulo and capa:
+        remove_livros_lidos(username, titulo)
+        remove_livros_lendo(username, titulo) 
+        remove_livros_a_ler(username, titulo)
         resultado = add_livros_lidos(username, titulo, capa, description)
         return jsonify({'success': resultado})
     else:
         return jsonify({'error': 'Parâmetros inválidos'}), 400
 
+@app.route('/deletar_livro', methods=['POST'])
+def deletar_livro():
+    data = request.get_json()
+    username = session['username']
+    livro_titulo = data.get('titulo')
+    try:
+        remove_livros_lidos(username, livro_titulo)
+        remove_livros_lendo(username, livro_titulo) 
+        remove_livros_a_ler(username, livro_titulo)
+        return jsonify({'success': True, 'message': 'Deletion successful'})
+
+    except Exception as e:
+        app.logger.error(f"An error occurred during user deletion: {e}")
+
+
 if __name__ == '__main__':
-    app.run(port=5500, debug=True)
+    app.run(host="0.0.0.0", port=5500, debug=True)

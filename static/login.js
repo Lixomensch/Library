@@ -47,8 +47,6 @@ async function submitLogin() {
         return false;
       }
       localStorage.setItem("username", username.toUpperCase());
-      // Redirecionar para main.html após o login bem-sucedido
-      alert(data.message)
       fetch('/main')
       .then(response => response.text())
       .then(html => {
@@ -68,7 +66,11 @@ async function submitLogin() {
 async function submitCad() {
   var username = document.getElementById('signupusername').value;
   var password = document.getElementById('signuppassword').value;
-
+  if (username === "" || password ==="")
+  {
+    alert("Invalid username or password");
+    return false;
+  }
   var loginMessage = document.getElementById('cadMessage');
 
   document.getElementById('signupusername').value = "";
@@ -90,7 +92,13 @@ async function submitCad() {
       loginMessage.innerHTML = 'Invalid username or password';
       loginMessage.style.color = 'red';
     }
-    alert(data.message);
+    else
+    {
+      fecharTelaCadastro();
+      abrirTelaFlutuante();
+    }
+    
+    alert(data.message)
   })
   .catch(error => {
     console.error("Erro ao enviar solicitação: ", error);
