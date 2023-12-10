@@ -7,8 +7,6 @@ Library é um projeto de biblioteca online dedicado a simplificar e organizar su
 [<img src="https://avatars.githubusercontent.com/u/104952737?v=4" alt="João Pedro Lemes" width="100">](https://github.com/Lixomensch)
 [<img src="https://avatars.githubusercontent.com/u/136506636?v=4" alt="João Augusto" width="100">](https://github.com/tenma2010)
 
-# Sem título
-
 ## Como Começar:
 
 1. **Clone o repositório:** Faça uma cópia do repositório Git utilizando o comando:
