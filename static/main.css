@@ -130,7 +130,7 @@ button {
 
 /* Biblioteca */
 
-#biblioteca{
+.biblioteca{
     height: auto;
     display: flex;
     flex-wrap: wrap;

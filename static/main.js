@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             // Verifique se a solicitação foi bem-sucedida
-            if (data.success) {
+            if (data.success.lendo) {
                 exibirLivros("biblioteca_lendo", data.success.lendo);
                 exibirLivros("biblioteca_vouler", data.success.livros_a_ler);
                 exibirLivros("biblioteca_terminei", data.success.lidos);
@@ -251,7 +251,6 @@ function exibirLivros(categoria, livros) {
             capaElemento.style.width = "70px";
             capaElemento.style.height = "80px";
             capaElemento.src = livro.capa;
-
             const tituloElemento = document.createElement("p");
             tituloElemento.textContent = livro.titulo;
             tituloElemento.style.margin = "0";
@@ -299,7 +298,7 @@ function descrição(livro) {
     tituloElemento.textContent = livro.titulo;
 
     const description = document.createElement("h2");
-    description.textContent = livro.description;
+    description.textContent = livro.descricao;
     description.setAttribute("id", "description_modaldes");
     description.classList.add("description_modaldes")
 

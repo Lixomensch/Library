@@ -147,11 +147,10 @@ def select_in_livros_lidos(username):
     if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "SELECT * FROM livros_lidos JOIN livros ON livros_lidos.id_livro = livros.id WHERE livros_lidos.id_usuario = ?;"
-            cursor.execute(consulta, (user_id))
+            consulta = "SELECT livros.* FROM livros JOIN livros_lidos ON livros_lidos.id_usuario = ? WHERE livros_lidos.id_livro = livros.id;"
+            cursor.execute(consulta, (user_id,))
             resultados = cursor.fetchall()
-            if resultados:
-                return resultados
+            return resultados
     return False
 
 def add_livros_lidos(username, titulo,capa,description):
@@ -187,11 +186,10 @@ def select_in_livros_lendo(username):
     if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "SELECT * FROM livros_lendo JOIN livros ON livros_lendo.id_livro = livros.id WHERE livros_lendo.id_usuario = ?;"
-            cursor.execute(consulta, (user_id))
+            consulta = "SELECT livros.* FROM livros JOIN livros_lendo ON livros_lendo.id_usuario = ? WHERE livros_lendo.id_livro = livros.id;"
+            cursor.execute(consulta, (user_id,))
             resultados = cursor.fetchall()
-            if resultados:
-                return resultados
+            return resultados
     return False
 
 def add_livros_lendo(username, titulo, capa, description):
@@ -228,11 +226,10 @@ def select_in_livros_a_ler(username):
     if user_id != -1:
         with db_connection() as connection:
             cursor = connection.cursor()
-            consulta = "SELECT * FROM livros_a_ler JOIN livros ON livros_a_ler.id_livro = livros.id WHERE livros_a_ler.id_usuario = ?;"
-            cursor.execute(consulta, (user_id))
+            consulta = "SELECT livros.* FROM livros JOIN livros_a_ler ON livros_a_ler.id_usuario = ? WHERE livros_a_ler.id_livro = livros.id;"
+            cursor.execute(consulta, (user_id,))
             resultados = cursor.fetchall()
-            if resultados:
-                return resultados
+            return resultados
     return False         
 
 def add_livros_a_ler(username, titulo,capa,description):
@@ -356,13 +353,11 @@ def deletar():
 @app.route('/get-livros', methods=['POST'])
 def all_livros():
     username = session['username']
-    try:
-        livros_a_ler = select_in_livros_a_ler(username)
-        lendo = select_in_livros_lendo(username)
-        lidos = select_in_livros_lidos(username)     
-        return jsonify({'success': {'livros_a_ler': livros_a_ler, 'lendo': lendo, 'lidos': lidos}})
-    except:
-        return jsonify({'success': False, 'message': 'Books not found'})
+
+    livros_a_ler = select_in_livros_a_ler(username)
+    lendo = select_in_livros_lendo(username)
+    lidos = select_in_livros_lidos(username)     
+    return jsonify({'success': {'livros_a_ler': livros_a_ler, 'lendo': lendo, 'lidos': lidos}})
 
 @app.route('/set_Quero_ler', methods=['POST'])
 def set_Quero_ler():
