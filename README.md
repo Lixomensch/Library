@@ -63,3 +63,12 @@ Library é um projeto de biblioteca online dedicado a simplificar e organizar su
 9. **Cole o link no navegador:** Abra um navegador da web e cole o link copiado. Isso abrirá o aplicativo no navegador.
     
     Por exemplo, se o link copiado for `http://127.0.0.1:5500/`, digite esse endereço na barra de endereços do seu navegador e pressione Enter.
+
+10. **Aproveite!**
+    
+    Agora, você está pronto para explorar o aplicativo. Divirta-se!
+    
+    Gostaríamos de agradecer por Testar o nosso projeto! Se tiver alguma dúvida, sugestão ou encontrar algum problema, por favor, não hesite em [abrir uma issue](https://github.com/Lixomensch/Library/issues). Seu feedback é valioso e contribui para tornar o Library ainda melhor. Obrigado pela sua participação!
+
+
+    
