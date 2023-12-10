@@ -38,22 +38,16 @@ Library é um projeto de biblioteca online dedicado a simplificar e organizar su
     pip list
     ```
     
-6. **Inicie o aplicativo:** Vá para a pasta do projeto:
-    
-    ```bash
-    cd caminho/do/seu/projeto
-    ```
-    
 7. **Execute o aplicativo:** Use o comando Python para iniciar o aplicativo:
     
     ```bash
-    python app.py
+    python library.py
     ```
     
     ou
     
     ```bash
-    python3 app.py
+    python3 library.py
     ```
     
 8. **Copie o link após "Running on ...":** Após iniciar o aplicativo, procure pela mensagem "Running on" no terminal. Você verá algo semelhante a:
