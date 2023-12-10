@@ -147,23 +147,6 @@ async function search(bookTitle, apiKey) {
     }
 }
 
-
-
-
-
-
-
-/*
-<div class="inserir">
-            <select id="statusSelect">
-                <option value="lendo">Lendo</option>
-                <option value="vouLer">Vou Ler</option>
-                <option value="concluido">Concluído</option>
-            </select>
-            <button id="insertBookButton">Inserir</button>
-        </div>*/
-
-// Funções para abrir e fechar a tela de perfil
 document.getElementById('openProfileBtn').addEventListener('click', openProfile);
 document.getElementById('fechar').addEventListener('click', closeProfile);
 
@@ -185,10 +168,6 @@ function deleteAccount() {
     alert('Implemente a lógica para deletar a conta aqui.');
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    Lendo();
-});
-
 function enviarRequisicao(rota, livro) {
     fetch(rota, {
         method: 'POST',
@@ -201,17 +180,17 @@ function enviarRequisicao(rota, livro) {
             description: livro.description
         }),
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("Livro incluído com sucesso!");
-        } else {
-            alert("Erro ao incluir o livro.");
-        }
-    })
-    .catch(error => {
-        console.error('Erro na requisição:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Livro incluído com sucesso!");
+            } else {
+                alert("Erro ao incluir o livro.");
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
 }
 
 function set_livro(livro) {
@@ -235,28 +214,32 @@ function set_livro(livro) {
     }
 }
 
-/*
-function get_livros() {
-    fetch("/Terminei")
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('/get-livros', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
         .then(response => response.json())
-        .then(data => exibirLivros(data))
-        .catch(error => console.error("Erro ao obter dados:", error));
-}
-
-document.getElementById("btnCarregarLivros").addEventListener("click", function () {
-    exibirLivros();
+        .then(data => {
+            // Verifique se a solicitação foi bem-sucedida
+            if (data.success) {
+                exibirLivros("biblioteca_lendo", data.success.lendo);
+                exibirLivros("biblioteca_vouler", data.success.livros_a_ler);
+                exibirLivros("biblioteca_terminei", data.success.lidos);
+            } else {
+                // Trate o caso em que não há livros encontrados
+                console.error('Erro ao obter livros:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro na solicitação:', error);
+        });
 });
-*/
 
-function exibirLivros() {
-    const livros = [
-        { titulo: "Lifsdg fjhgd sgj fgdskgsdhgk hdskgjhkds jhgkds jhgkj dshkj", capa: "/images/anão_home.jpg" },
-        { titulo: "Livro 2", capa: "/images/anão_home.jpg" },
-        { titulo: "Livro 3", capa: "/images/anão_home.jpg" },
-        // Adicione mais livros conforme necessário
-    ];
-
-    const livroLista = document.getElementById("bliblioteca");
+function exibirLivros(categoria, livros) {
+    const livroLista = document.getElementById(categoria);
     livroLista.innerHTML = "";
 
     if (livroLista) {
