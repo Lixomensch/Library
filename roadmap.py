@@ -120,7 +120,6 @@ def get_signup_from_database(username, password):
 def get_update_from_database(username,password,new_password):
     if username_exists(username) and get_password(username=username, password=password)==1:
         with db_connection() as connection:
-            print("oiiiiiiiiiii")
             cursor = connection.cursor()
             consulta = "UPDATE usuario SET password=? WHERE username=?;"
             cursor.execute(consulta,(new_password, username))

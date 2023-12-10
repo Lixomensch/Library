@@ -153,36 +153,23 @@ button {
     background-color: #4F4F4F;
     margin-bottom: 10px;
     height: 150px;
-    overflow: hidden;
+    overflow: auto;
     flex-direction: row;
     position: relative;
+    cursor: pointer;
 }
 
-.biblioteca::before,
-.biblioteca::after {
-    width: 20px; 
-    height: 100%;
-    position: absolute;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFF; 
-    font-size: 30px;
-    line-height: 1; 
-    text-shadow: 1px 1px 2px rgba(0, 0, 0);
-    
+.biblioteca::-webkit-scrollbar {
+    width: 2px;
+    height: 10px; 
 }
 
-.biblioteca::before {
-    content: '<';
-    left: 5px;
+.biblioteca::-webkit-scrollbar-thumb {
+    background-color: #A9A9A9; 
+    border-radius: 4px; 
 }
 
-.biblioteca::after {
-    content: '>';
-    right: 5px;
-}
+
 
 #root{
     padding: 10px;
@@ -291,6 +278,7 @@ button {
     text-align: center;
     border-radius: 5px;
     border: none;
+    cursor: pointer;
 }
 
 .select_modaldes:hover{
@@ -358,6 +346,7 @@ button {
     height: 144px;
     width: 96px; 
     margin-right: 10px;
+    cursor: pointer;
 }
 
 #titlecapaslivro{
